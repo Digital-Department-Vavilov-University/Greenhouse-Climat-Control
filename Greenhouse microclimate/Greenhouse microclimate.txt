@@ -1,0 +1,99 @@
+// ================== Константы и структуры ==================
+
+namespace Config {
+
+    // Общие настройки системы
+    constexpr bool startMenuEnabled = false;
+    constexpr bool usePlots = false;
+    constexpr bool useDawn = false;
+    constexpr bool useDrive = false;
+
+    // Сервоприводы
+    struct ServoConfig {
+        bool relayReplace;
+        bool smoothControl;
+        int minPulse;
+        int maxPulse;
+    };
+
+    constexpr ServoConfig servo1 { true, false, 500, 2500 };
+    constexpr ServoConfig servo2 { true, false, 500, 2500 };
+
+    // ПИД-регулятор
+    struct PIDConfig {
+        bool enabled;
+        bool relaySupport;
+        int scheduleCount;
+        int intMin;
+        int intMax;
+        bool autoTune;
+        bool debugMode;
+        bool showIntegral;
+    };
+
+    constexpr PIDConfig pid { false, false, 0, -3000, 3000, false, false, true };
+
+    // Управление
+    enum class EncoderType { Type0, Type1 };
+    constexpr EncoderType encoderType = EncoderType::Type1;
+    constexpr bool encoderReverse = true;
+    enum class ControlMode { HoldAndTurn, ClickToChange };
+    constexpr ControlMode controlType = ControlMode::ClickToChange;
+    constexpr bool fastTurnEnabled = true;
+    constexpr int fastTurnStep = 10;
+
+    // Датчики
+    struct SensorConfig {
+        bool useCO2;
+        int co2Pin;
+        int co2Max;
+        bool co2Calib;
+        bool useBME280;
+        bool useHTU21D;
+        bool useDALLAS;
+        int dallasAmount;
+        int dallasMode;
+        int dallasDisp;
+        uint8_t dsAddresses[3][8]; // Максимум 3 датчика
+        bool useDHT;
+        int dhtType;
+        bool useThermistor[4];
+        int betaCoef[4];
+    };
+
+    constexpr SensorConfig sensors {
+        false, 1, 5000, false,
+        false, false,
+        false, 1, 0, 0, 0,
+        {{0x28,0xFF,0x42,0x5A,0x51,0x17,0x04,0xD2},
+         {0x28,0xFF,0x53,0xE5,0x50,0x17,0x04,0xC3},
+         {0x28,0xFF,0x99,0x80,0x50,0x17,0x04,0x4D}},
+        false, 22,
+        {false, false, false, false},
+        {3435, 3435, 3435, 3435}
+    };
+
+    // Другие настройки
+    constexpr int wireOverclock = 1;
+    constexpr uint8_t lcdAddr = 0x3f;
+    constexpr uint8_t bmeAddr = 0x76;
+    constexpr int setTimeout = 100;
+    constexpr bool watchdogEnabled = false;
+
+    // Названия каналов
+    const char* channelNames[] = {
+        "Channel 1", "Channel 2", "Channel 3", "Channel 4",
+        "Channel 5", "Channel 6", "Channel 7",
+        "Servo 1", "Servo 2", "Drive"
+    };
+
+} // namespace Config
+
+// ================== Использование ==================
+// Например, для обращения к настройкам сервоприводов:
+void setupServos() {
+    if (Config::servo1.relayReplace) {
+        // инициализация реле вместо сервопривода 1
+    }
+    // и так далее...
+}
